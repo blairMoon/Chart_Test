@@ -19,6 +19,7 @@ export default function ForceGraph() {
       new am4plugins_forceDirected.ForceDirectedSeries()
     );
 
+    // ✅ 거리값 매핑
     const nodeDistanceMap: Record<string, number> = {
       진영: 100,
       하린: 1000,
@@ -35,21 +36,22 @@ export default function ForceGraph() {
     networkSeries.data = [
       {
         name: "나",
+        value: 500, // tooltip이 뜨게 하려면 value를 지정해주는 것이 좋음
         children: Object.entries(nodeDistanceMap).map(([name, distance]) => ({
           name,
-          value: Math.floor(Math.random() * 400 + 100), // 임의 value
+          value: Math.floor(Math.random() * 200 + 100),
           distance,
         })),
       },
     ];
 
-    // ✅ 필드 설정
+    // ✅ 필드 매핑
     networkSeries.dataFields.name = "name";
     networkSeries.dataFields.id = "name";
     networkSeries.dataFields.value = "value";
     networkSeries.dataFields.children = "children";
 
-    // ✅ 거리 adapter
+    // ✅ 거리 adapter (노드별 연결 거리 조절)
     networkSeries.links.template.adapter.add(
       "distance",
       (defaultDistance, target) => {
@@ -61,16 +63,15 @@ export default function ForceGraph() {
       }
     );
 
-    // ✅ 노드 스타일
+    // ✅ 노드 스타일링
     const nodeTemplate = networkSeries.nodes.template;
-    nodeTemplate.tooltipText = "{name}";
-    nodeTemplate.fillOpacity = 1;
+    nodeTemplate.tooltipText = "{name}"; // 모든 노드 툴팁 적용
     nodeTemplate.label.text = "{name}";
     nodeTemplate.label.fontSize = 10;
     nodeTemplate.label.fill = am4core.color("#ffffff");
-    nodeTemplate.label.background.fillOpacity = 0;
-    nodeTemplate.label.padding(0, 0, 0, 0);
 
+    // ✅ 노드 테두리 등 제거
+    nodeTemplate.fillOpacity = 1;
     nodeTemplate.circle.strokeWidth = 0;
     nodeTemplate.circle.strokeOpacity = 0;
     nodeTemplate.circle.stroke = am4core.color("transparent");
@@ -81,13 +82,13 @@ export default function ForceGraph() {
     nodeTemplate.outerCircle.filters.clear();
     nodeTemplate.outerCircle.adapter.add("radius", () => 0);
 
+    // ✅ 기타 그래프 설정
     networkSeries.maxLevels = 2;
     networkSeries.maxRadius = am4core.percent(10);
-    networkSeries.manyBodyStrength = -8;
-    networkSeries.links.template.disabled = false;
     networkSeries.minRadius = 20;
-    networkSeries.maxRadius = 40;
-    networkSeries.linkWithStrength = 0.7; // default는 1, 0.5~1로 조정해보세요
+    networkSeries.manyBodyStrength = -8;
+    networkSeries.links.template.disabled = true;
+
     chartRef.current = chart;
     return () => chart.dispose();
   }, []);

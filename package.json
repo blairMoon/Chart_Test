@@ -13,9 +13,11 @@
     "@amcharts/amcharts4": "^4.10.40",
     "@react-spring/web": "^10.0.1",
     "@use-gesture/react": "^10.3.1",
+    "framer-motion": "^12.19.1",
     "konva": "^9.3.20",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-force-graph-2d": "^1.27.1",
     "react-konva": "^19.0.6",
     "zustand": "^5.0.5"
   },
